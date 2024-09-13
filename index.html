@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memo Transcribe Assist Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 重置和基本样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
+        }
+        /* 应用程序头部 */
+        .app-header {
+            background-color: #000;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1;
+        }
+        /* 对话区域 */
+        .conversation {
+            padding: 70px 20px 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .message {
+            margin-bottom: 20px;
+        }
+        .speaker {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .timestamp {
+            color: #666;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        .text-content {
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        /* 播放控制 */
+        .playback-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            z-index: 1;
+        }
+        .playback-controls svg {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            fill: #000;
+        }
+        /* 思维导图悬浮图标 */
+        .mindmap-float-icon {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 1;
+        }
+        .mindmap-float-icon:hover {
+            transform: scale(1.1);
+        }
+        .mindmap-float-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: #fff;
+        }
+        /* 思维导图弹窗 */
+        .mindmap-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: none;
+            flex-direction: column;
+            z-index: 2;
+            overflow: hidden;
+        }
+        .mindmap-container {
+            flex: 1;
+            position: relative;
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 30px;
+            color: #000;
+            cursor: pointer;
+            z-index: 3;
+        }
+        /* 分享按钮 */
+        .share-button {
+            position: absolute;
+            top: 20px;
+            right: 80px;
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
+            z-index: 3;
+        }
+        /* 思维导图样式 */
+        .mindmap-node {
+            fill: #f0f0f0;
+            stroke: #000;
+            stroke-width: 1px;
+        }
+        .mindmap-text {
+            font-size: 14px;
+            text-anchor: middle;
+            fill: #000;
+        }
+        /* 动画效果 */
+        .fade-in {
+            opacity: 0;
+            animation: fadeInAnimation 0.5s forwards;
+        }
+        @keyframes fadeInAnimation {
+            to {
+                opacity: 1;
+            }
+        }
+        /* 聊天框样式 */
+        .chat-box {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #fafafa;
+        }
+        .chat-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        .chat-messages {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+        }
+        .chat-message .user {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 应用程序头部 -->
+    <div class="app-header">
+        Memo Transcribe Assist
+    </div>
+    <!-- 对话区域 -->
+    <div class="conversation">
+        <!-- Speaker 1 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 1</span>
+                <span class="timestamp">00:01</span>
+            </div>
+            <div class="text-content">
+                <p>English: "The transcribe assist trial on the Memo enables users to record speech and create a transcription of what was said."</p>
+                <p>中文翻译："Memo 的转录辅助试用使用户能够录制语音并创建所说内容的转录。"</p>
+            </div>
+        </div>
+        <!-- Speaker 2 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 2</span>
+                <span class="timestamp">00:15</span>
+            </div>
+            <div class="text-content">
+                <p>English: "In addition to transcription, the feature offers automatic summarization for easier review."</p>
+                <p>中文翻译："除了转录外，该功能还提供自动总结，以便更轻松地进行审阅。"</p>
+            </div>
+        </div>
+        <!-- Speaker 3 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 3</span>
+                <span class="timestamp">00:25</span>
+            </div>
+            <div class="text-content">
+                <p>English: "This feature is part of a broader suite of productivity tools designed for professionals."</p>
+                <p>中文翻译："此功能是为专业人士设计的更广泛生产力工具套件的一部分。"</p>
+            </div>
+        </div>
+        <!-- Speaker 1 Again -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 1</span>
+                <span class="timestamp">00:40</span>
+            </div>
+            <div class="text-content">
+                <p>English: "The transcribe assist feature is available through the Voice Recorder app."</p>
+            </div>
+        </div>
+    </div>
+    <!-- 播放控制 -->
+    <div class="playback-controls">
+        <!-- 书签图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M6 2v19l6-5.5L18 21V2z"/>
+        </svg>
+        <!-- 循环播放图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M17 1l4 4-4 4V6H7v4L3 5l4-4v3h10V1zM7 17v-4H5v4H1l4 4 4-4H7zm10 0h-3v3l4 4 4-4v-3h-2v4h-4v-4z"/>
+        </svg>
+        <!-- 播放图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+        <!-- 分享图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M18 16.08C17.24 16.08 16.56 16.38 16.05 16.85L8.91 12.7C8.96 12.47 9 12.24 9 12s-.04-.47-.09-.7l7.05-4.15c.5.47 1.19.77 1.95.77 1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7L7.95 9.85C7.45 9.38 6.76 9.08 6 9.08c-1.66 0-3 1.34-3 3s1.34 3 3 3c.76 0 1.45-.3 1.95-.77l7.14 4.15c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/>
+        </svg>
+    </div>
+    <!-- 思维导图悬浮图标 -->
+    <div class="mindmap-float-icon" onclick="showMindmap()">
+        <!-- 思维导图图标 -->
+        <svg viewBox="0 0 64 64">
+            <path d="M32 12a4 4 0 110-8 4 4 0 010 8zm0 48a4 4 0 110-8 4 4 0 010 8zm20-24a4 4 0 110-8 4 4 0 010 8zm-40 0a4 4 0 110-8 4 4 0 010 8zm30-18l-10 10M22 22l-10-10m40 40l-10-10M22 42l-10 10" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+    </div>
+    <!-- 思维导图弹窗 -->
+    <div class="mindmap-modal" id="mindmapModal">
+        <div class="close-button" onclick="closeMindmap()">&times;</div>
+        <div class="share-button" onclick="shareMindmap()">&#x1F517;</div>
+        <div class="mindmap-container" id="mindmapContainer">
+            <!-- 思维导图 SVG -->
+            <svg id="mindmapSVG" width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <!-- 聊天框 -->
+        <div class="chat-box">
+            <div class="chat-messages" id="chatMessages"></div>
+            <input type="text" class="chat-input" id="chatInput" placeholder="请提问..." onkeypress="handleKeyPress(event)">
+        </div>
+    </div>
+    <!-- JavaScript Functions -->
+    <script>
+        function showMindmap() {
+            document.getElementById('mindmapModal').style.display = 'flex';
+            generateMindmap();
+        }
+        function closeMindmap() {
+            document.getElementById('mindmapModal').style.display = 'none';
+            // 清除 SVG 内容
+            document.getElementById('mindmapSVG').innerHTML = '';
+            // 清除聊天内容
+            document.getElementById('chatMessages').innerHTML = '';
+        }
+        function generateMindmap() {
+            const svg = document.getElementById('mindmapSVG');
+            const width = 800;
+            const height = 600;
+            const centerX = width / 2;
+            const centerY = 100;
+            const nodeRadius = 50;
+
+            const nodes = [
+                { id: 1, text: 'Memo Transcribe Assist', x: centerX, y: centerY },
+                { id: 2, text: 'Introduction', x: centerX - 200, y: centerY + 150 },
+                { id: 3, text: 'Record Speech', x: centerX - 300, y: centerY + 300 },
+                { id: 4, text: 'Create Transcription', x: centerX - 100, y: centerY + 300 },
+                { id: 5, text: 'Automatic Summarization', x: centerX, y: centerY + 150 },
+                { id: 6, text: 'Easier Review', x: centerX, y: centerY + 300 },
+                { id: 7, text: 'Productivity Tools', x: centerX + 200, y: centerY + 150 },
+                { id: 8, text: 'Designed for Professionals', x: centerX + 200, y: centerY + 300 },
+                { id: 9, text: 'Available via Voice Recorder App', x: centerX, y: centerY + 450 },
+            ];
+
+            const links = [
+                { source: 1, target: 2 },
+                { source: 2, target: 3 },
+                { source: 2, target: 4 },
+                { source: 1, target: 5 },
+                { source: 5, target: 6 },
+                { source: 1, target: 7 },
+                { source: 7, target: 8 },
+                { source: 1, target: 9 },
+            ];
+
+            // 创建连线
+            links.forEach((link, index) => {
+                setTimeout(() => {
+                    const sourceNode = nodes.find(node => node.id === link.source);
+                    const targetNode = nodes.find(node => node.id === link.target);
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', sourceNode.x);
+                    line.setAttribute('y1', sourceNode.y);
+                    line.setAttribute('x2', targetNode.x);
+                    line.setAttribute('y2', targetNode.y);
+                    line.setAttribute('stroke', '#000');
+                    line.setAttribute('stroke-width', '2');
+                    line.classList.add('fade-in');
+                    svg.appendChild(line);
+                }, index * 300);
+            });
+
+            // 创建节点
+            nodes.forEach((node, index) => {
+                setTimeout(() => {
+                    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    group.classList.add('fade-in');
+
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', node.x);
+                    circle.setAttribute('cy', node.y);
+                    circle.setAttribute('r', nodeRadius);
+                    circle.setAttribute('class', 'mindmap-node');
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', node.x);
+                    text.setAttribute('y', node.y);
+                    text.setAttribute('dy', '.35em');
+                    text.setAttribute('class', 'mindmap-text');
+                    text.textContent = node.text;
+                    // 自动换行
+                    const words = node.text.split(' ');
+                    let lineText = '';
+                    const lineHeight = 16;
+                    let tspanIndex = 0;
+                    words.forEach((word, i) => {
+                        const testLine = lineText + word + ' ';
+                        const testElem = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        testElem.textContent = testLine;
+                        text.appendChild(testElem);
+                        const bbox = testElem.getBBox();
+                        if (bbox.width > nodeRadius * 1.8 && lineText !== '') {
+                            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                            tspan.setAttribute('x', node.x);
+                            tspan.setAttribute('dy', lineHeight);
+                            tspan.textContent = word + ' ';
+                            text.appendChild(tspan);
+                            lineText = word + ' ';
+                            tspanIndex++;
+                        } else {
+                            if (tspanIndex === 0) {
+                                testElem.setAttribute('x', node.x);
+                                testElem.setAttribute('dy', '0');
+                            } else {
+                                testElem.setAttribute('x', node.x);
+                                testElem.setAttribute('dy', lineHeight);
+                            }
+                            lineText = testLine;
+                        }
+                        text.removeChild(testElem);
+                    });
+
+                    // 添加最终的 tspan
+                    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.setAttribute('x', node.x);
+                    tspan.setAttribute('dy', tspanIndex === 0 ? '0' : lineHeight);
+                    tspan.textContent = lineText.trim();
+                    text.appendChild(tspan);
+
+                    group.appendChild(circle);
+                    group.appendChild(text);
+                    svg.appendChild(group);
+                }, index * 300);
+            });
+        }
+
+        function shareMindmap() {
+            alert('分享功能尚未实现。');
+            // 在此处添加实际的分享逻辑，例如生成图片或链接。
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message !== '') {
+                const chatMessages = document.getElementById('chatMessages');
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('chat-message');
+                userMessage.innerHTML = `<span class="user">你:</span> ${message}`;
+                chatMessages.appendChild(userMessage);
+                input.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // 模拟回复
+                setTimeout(() => {
+                    const assistantMessage = document.createElement('div');
+                    assistantMessage.classList.add('chat-message');
+                    assistantMessage.innerHTML = `<span class="user">助理:</span> 关于 "${message}"，这是我的回复。`;
+                    chatMessages.appendChild(assistantMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
