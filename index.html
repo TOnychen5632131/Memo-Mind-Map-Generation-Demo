@@ -70,8 +70,8 @@
             cursor: pointer;
             fill: #000;
         }
-        /* 思维导图悬浮图标 */
-        .mindmap-float-icon {
+        /* AI 悬浮球 */
+        .ai-float-icon {
             position: fixed;
             bottom: 90px;
             right: 30px;
@@ -86,12 +86,32 @@
             transition: transform 0.3s;
             z-index: 1;
         }
-        .mindmap-float-icon:hover {
+        .ai-float-icon:hover {
             transform: scale(1.1);
         }
-        .mindmap-float-icon svg {
+        .ai-float-icon svg {
             width: 35px;
             height: 35px;
+            fill: #fff;
+        }
+        /* 子选项按钮 */
+        .sub-option {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #000;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .sub-option svg {
+            width: 25px;
+            height: 25px;
             fill: #fff;
         }
         /* 思维导图弹窗 */
@@ -217,7 +237,7 @@
                 <p>中文翻译："Memo 的转录辅助试用使用户能够录制语音并创建所说内容的转录。"</p>
             </div>
         </div>
-        <!-- Speaker 1 -->
+        <!-- Speaker 2 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 2</span>
@@ -228,7 +248,7 @@
                 <p>中文翻译："除了转录外，该功能还提供自动总结，以便更轻松地进行审阅。"</p>
             </div>
         </div>
-        <!-- Speaker 2 -->
+        <!-- Speaker 3 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 3</span>
@@ -239,7 +259,7 @@
                 <p>中文翻译："此功能是为专业人士设计的更广泛生产力工具套件的一部分。"</p>
             </div>
         </div>
-        <!-- Speaker 1 -->
+        <!-- Speaker 4 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 4</span>
@@ -250,7 +270,7 @@
                 <p>中文翻译："用户还可以通过该应用程序与团队成员实时协作。"</p>
             </div>
         </div>
-        <!-- Speaker 2 -->
+        <!-- Speaker 5 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 5</span>
@@ -261,7 +281,7 @@
                 <p>中文翻译："安全功能确保所有数据都被加密并安全存储。"</p>
             </div>
         </div>
-        <!-- Speaker 2 -->
+        <!-- Speaker 6 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 6</span>
@@ -272,7 +292,7 @@
                 <p>中文翻译："我们计划在下次更新中添加对更多语言的支持。"</p>
             </div>
         </div>
-        <!-- Speaker 2 -->
+        <!-- Speaker 7 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 7</span>
@@ -291,9 +311,13 @@
             <path d="M6 2v19l6-5.5L18 21V2z"/>
         </svg>
         <!-- 循环播放图标 -->
-        <svg viewBox="0 0 24 24">
-            <path d="M17 1l4 4-4 4V6H7v4L3 5l4-4v3h10V1zM7 17v-4H5v4H1l4 4 4-4H7zm10 0h-3v3l4 4 4-4v-3h-2v4h-4v-4z"/>
-        </svg>
+<!-- 循环图标 -->
+<!-- 替换为另一种循环图标 -->
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 4V1L8 5l4 4V6c3.86 0 7 3.14 7 7 0 .34-.03.67-.08 1h2.02c.05-.33.06-.66.06-1 0-4.97-4.03-9-9-9zm-7 7c0-.34.03-.67.08-1H3.06c-.05.33-.06.66-.06 1 0 4.97 4.03 9 9 9v3l4-4-4-4v3c-3.86 0-7-3.14-7-7z"/>
+</svg>
+
+
         <!-- 播放图标 -->
         <svg viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z"/>
@@ -303,11 +327,36 @@
             <path d="M18 16.08C17.24 16.08 16.56 16.38 16.05 16.85L8.91 12.7C8.96 12.47 9 12.24 9 12s-.04-.47-.09-.7l7.05-4.15c.5.47 1.19.77 1.95.77 1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7L7.95 9.85C7.45 9.38 6.76 9.08 6 9.08c-1.66 0-3 1.34-3 3s1.34 3 3 3c.76 0 1.45-.3 1.95-.77l7.14 4.15c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/>
         </svg>
     </div>
-    <!-- 思维导图悬浮图标 -->
-    <div class="mindmap-float-icon" onclick="showMindmap()">
+    <!-- AI 悬浮球 -->
+    <div class="ai-float-icon" onclick="toggleOptions()">
+        <!-- 星星图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+    </div>
+    <!-- 子选项按钮 -->
+    <div class="sub-option" id="option1" onclick="showMindmap()" style="bottom: 160px; right: 30px;">
         <!-- 思维导图图标 -->
-        <svg viewBox="0 0 64 64">
-            <path d="M32 12a4 4 0 110-8 4 4 0 010 8zm0 48a4 4 0 110-8 4 4 0 010 8zm20-24a4 4 0 110-8 4 4 0 010 8zm-40 0a4 4 0 110-8 4 4 0 010 8zm30-18l-10 10M22 22l-10-10m40 40l-10-10M22 42l-10 10" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+<!-- 思维导图图标 -->
+<!-- 大脑图标 -->
+    <!-- 大脑图标 -->
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 2C15.924 2 11 6.924 11 13v5.375c0 .69-.561 1.25-1.25 1.25-4.832 0-8.75 3.918-8.75 8.75 0 3.662 2.188 6.81 5.32 8.12a1.25 1.25 0 0 0 .815 1.617c2.91.857 5.32 3.39 5.32 6.553 0 4.37 3.568 7.938 7.937 7.938H22a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6h1.312c4.37 0 7.938-3.569 7.938-7.938 0-3.163 2.41-5.696 5.32-6.553a1.25 1.25 0 0 0 .815-1.617c3.132-1.31 5.32-4.458 5.32-8.12 0-4.832-3.918-8.75-8.75-8.75-.69 0-1.25-.561-1.25-1.25V13c0-6.076-4.924-11-11-11-3.394 0-6.432 1.547-8.434 4.104A11.002 11.002 0 0 0 22 2zm10.717 4.565A8.744 8.744 0 0 1 34 6c4.832 0 8.75 3.918 8.75 8.75v4.585c0 1.897 1.47 3.592 3.34 3.88a6.25 6.25 0 0 1-.09 12.44 6.25 6.25 0 0 1-5.5 6.855A3.75 3.75 0 0 0 37.5 48h-3a3.75 3.75 0 0 0-3.658 3H25c-3.003 0-5.437-2.434-5.437-5.437 0-3.712-2.015-6.94-4.963-8.557a6.25 6.25 0 0 1-.09-12.44c1.87-.288 3.34-1.983 3.34-3.88V13c0-4.832 3.918-8.75 8.75-8.75 1.006 0 1.972.172 2.877.487a1.25 1.25 0 0 0 1.28-.172z"/>
+    </svg>
+
+
+    </div>
+    
+    <div class="sub-option" id="option2" onclick="generateReport()" style="bottom: 230px; right: 30px;">
+        <!-- 报告图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7zm0 7V3.5L18.5 9H13z"/>
+        </svg>
+    </div>
+    <div class="sub-option" id="option3" onclick="generatePPT()" style="bottom: 300px; right: 30px;">
+        <!-- PPT 图标 -->
+        <svg viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14h2V5h14V3zm-1 4H6v2h12V7zm0 4H6v2h12v-2zm0 4H6v2h12v-2z"/>
         </svg>
     </div>
     <!-- 思维导图弹窗 -->
@@ -331,11 +380,29 @@
     <!-- JavaScript Functions -->
     <script>
         let svgPanZoomInstance;
+        let optionsVisible = false;
+
+        function toggleOptions() {
+            optionsVisible = !optionsVisible;
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const option3 = document.getElementById('option3');
+            if (optionsVisible) {
+                option1.style.display = 'flex';
+                option2.style.display = 'flex';
+                option3.style.display = 'flex';
+            } else {
+                option1.style.display = 'none';
+                option2.style.display = 'none';
+                option3.style.display = 'none';
+            }
+        }
 
         function showMindmap() {
             document.getElementById('mindmapModal').style.display = 'flex';
             generateMindmap();
             initPanZoom();
+            toggleOptions(); // 隐藏选项
         }
 
         function closeMindmap() {
@@ -348,40 +415,48 @@
             }
         }
 
+        function generateReport() {
+            alert('生成会议报告功能尚未实现。');
+            toggleOptions(); // 隐藏选项
+        }
+
+        function generatePPT() {
+            alert('AI 生成会议纪要 PPT 功能尚未实现。');
+            toggleOptions(); // 隐藏选项
+        }
+
         function generateMindmap() {
             const svg = document.getElementById('mindmapSVG');
             const width = 1200;
             const height = 600;
 
             const nodes = [
-                { id: 1, text: 'Memo Transcribe Assist', x: 100, y: height / 2 },
-                { id: 2, text: 'Introduction', x: 300, y: height / 2 - 100 },
-                { id: 3, text: 'Record Speech', x: 500, y: height / 2 - 150 },
-                { id: 4, text: 'Create Transcription', x: 500, y: height / 2 - 50 },
-                { id: 5, text: 'Automatic Summarization', x: 300, y: height / 2 + 100 },
-                { id: 6, text: 'Easier Review', x: 500, y: height / 2 + 100 },
-                { id: 7, text: 'Productivity Tools', x: 700, y: height / 2 },
-                { id: 8, text: 'Designed for Professionals', x: 900, y: height / 2 - 100 },
-                { id: 9, text: 'Real-time Collaboration', x: 1100, y: height / 2 - 150 },
-                { id: 10, text: 'Data Security', x: 1100, y: height / 2 - 50 },
-                { id: 11, text: 'Available via Voice Recorder App', x: 900, y: height / 2 + 100 },
-                { id: 12, text: 'More Language Support', x: 1100, y: height / 2 + 50 },
-                { id: 13, text: 'Positive User Feedback', x: 1100, y: height / 2 + 150 },
+                { id: 1, text: 'Memo 转录助手试用', x: 100, y: height / 2 },
+                { id: 2, text: '录制语音', x: 300, y: height / 2 - 100 },
+                { id: 3, text: '创建转录', x: 300, y: height / 2 },
+                { id: 4, text: '自动总结', x: 300, y: height / 2 + 100 },
+                { id: 5, text: '更易审阅', x: 500, y: height / 2 + 100 },
+                { id: 6, text: '生产力工具套件', x: 500, y: height / 2 - 100 },
+                { id: 7, text: '为专业人士设计', x: 700, y: height / 2 - 150 },
+                { id: 8, text: '实时协作', x: 700, y: height / 2 - 50 },
+                { id: 9, text: '数据安全', x: 700, y: height / 2 + 50 },
+                { id: 10, text: '加密存储', x: 700, y: height / 2 + 150 },
+                { id: 11, text: '更多语言支持', x: 900, y: height / 2 },
+                { id: 12, text: '积极的用户反馈', x: 1100, y: height / 2 },
             ];
 
             const links = [
                 { source: 1, target: 2 },
-                { source: 2, target: 3 },
-                { source: 2, target: 4 },
-                { source: 1, target: 5 },
-                { source: 5, target: 6 },
-                { source: 1, target: 7 },
-                { source: 7, target: 8 },
-                { source: 8, target: 9 },
-                { source: 8, target: 10 },
-                { source: 7, target: 11 },
-                { source: 11, target: 12 },
-                { source: 11, target: 13 },
+                { source: 1, target: 3 },
+                { source: 1, target: 4 },
+                { source: 4, target: 5 },
+                { source: 1, target: 6 },
+                { source: 6, target: 7 },
+                { source: 6, target: 8 },
+                { source: 6, target: 9 },
+                { source: 9, target: 10 },
+                { source: 1, target: 11 },
+                { source: 1, target: 12 },
             ];
 
             svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -422,16 +497,16 @@
                     text.setAttribute('class', 'mindmap-text');
 
                     // 自动换行
-                    const words = node.text.split(' ');
+                    const chars = node.text.split('');
                     let lineText = '';
                     const lineHeight = 14;
                     let tspanIndex = 0;
                     let tspans = [];
 
-                    words.forEach((word, i) => {
-                        const testLine = lineText + word + ' ';
+                    chars.forEach((char, i) => {
+                        lineText += char;
                         const testTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                        testTspan.textContent = testLine;
+                        testTspan.textContent = lineText;
                         testTspan.setAttribute('x', node.x);
                         if (tspanIndex === 0) {
                             testTspan.setAttribute('dy', '0');
@@ -440,7 +515,7 @@
                         }
                         text.appendChild(testTspan);
                         const bbox = testTspan.getComputedTextLength();
-                        if (bbox > 100 && lineText !== '') {
+                        if (bbox > 80) {
                             text.removeChild(testTspan);
                             const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                             tspan.setAttribute('x', node.x);
@@ -449,14 +524,13 @@
                             } else {
                                 tspan.setAttribute('dy', lineHeight);
                             }
-                            tspan.textContent = lineText.trim();
+                            tspan.textContent = lineText.slice(0, -1);
                             text.appendChild(tspan);
                             tspans.push(tspan);
-                            lineText = word + ' ';
+                            lineText = char;
                             tspanIndex++;
                         } else {
                             text.removeChild(testTspan);
-                            lineText = testLine;
                         }
                     });
 
@@ -468,7 +542,7 @@
                     } else {
                         tspan.setAttribute('dy', lineHeight);
                     }
-                    tspan.textContent = lineText.trim();
+                    tspan.textContent = lineText;
                     text.appendChild(tspan);
                     tspans.push(tspan);
 
