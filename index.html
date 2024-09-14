@@ -109,12 +109,12 @@
         .mindmap-container {
             flex: 1;
             position: relative;
-            overflow-y: auto; /* 允许垂直滚动 */
+            overflow: hidden;
         }
         .close-button {
             position: absolute;
             top: 20px;
-            right: 30px;
+            right: 20px;
             font-size: 30px;
             color: #000;
             cursor: pointer;
@@ -124,7 +124,7 @@
         .share-button {
             position: absolute;
             top: 20px;
-            right: 80px;
+            right: 60px;
             font-size: 24px;
             color: #000;
             cursor: pointer;
@@ -160,14 +160,6 @@
             border-top: 1px solid #ddd;
             background-color: #fafafa;
         }
-        .chat-input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-        }
         .chat-messages {
             max-height: 150px;
             overflow-y: auto;
@@ -178,6 +170,32 @@
         }
         .chat-message .user {
             font-weight: bold;
+        }
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        .send-button {
+            width: 60px;
+            height: 40px;
+            font-size: 16px;
+            background-color: #000; /* 黑色背景 */
+            color: #fff; /* 白色文字 */
+            border: none;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .send-button:hover {
+            background-color: #333;
         }
     </style>
 </head>
@@ -243,22 +261,11 @@
                 <p>中文翻译："安全功能确保所有数据都被加密并安全存储。"</p>
             </div>
         </div>
-        <!-- Speaker 1 Again -->
-        <div class="message">
-            <div>
-                <span class="speaker">Speaker 1</span>
-                <span class="timestamp">00:55</span>
-            </div>
-            <div class="text-content">
-                <p>English: "The transcribe assist feature is available through the Voice Recorder app."</p>
-                <p>中文翻译："转录辅助功能可通过语音记录器应用程序使用。"</p>
-            </div>
-        </div>
         <!-- Speaker 6 -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 6</span>
-                <span class="timestamp">01:05</span>
+                <span class="timestamp">00:55</span>
             </div>
             <div class="text-content">
                 <p>English: "We plan to add support for more languages in the next update."</p>
@@ -269,7 +276,7 @@
         <div class="message">
             <div>
                 <span class="speaker">Speaker 7</span>
-                <span class="timestamp">01:15</span>
+                <span class="timestamp">01:05</span>
             </div>
             <div class="text-content">
                 <p>English: "Feedback from users has been overwhelmingly positive so far."</p>
@@ -306,51 +313,60 @@
     <!-- 思维导图弹窗 -->
     <div class="mindmap-modal" id="mindmapModal">
         <div class="close-button" onclick="closeMindmap()">&times;</div>
+        <!-- 分享按钮 -->
         <div class="share-button" onclick="shareMindmap()">&#x1F517;</div>
         <div class="mindmap-container" id="mindmapContainer">
             <!-- 思维导图 SVG -->
-            <svg id="mindmapSVG" width="100%" preserveAspectRatio="xMidYMid meet"></svg>
+            <svg id="mindmapSVG" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
         <!-- 聊天框 -->
         <div class="chat-box">
             <div class="chat-messages" id="chatMessages"></div>
-            <input type="text" class="chat-input" id="chatInput" placeholder="请提问..." onkeypress="handleKeyPress(event)">
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="请提问..." onkeypress="handleKeyPress(event)">
+                <button class="send-button" onclick="sendMessage()">发送</button>
+            </div>
         </div>
     </div>
     <!-- JavaScript Functions -->
     <script>
+        let svgPanZoomInstance;
+
         function showMindmap() {
             document.getElementById('mindmapModal').style.display = 'flex';
             generateMindmap();
+            initPanZoom();
         }
+
         function closeMindmap() {
             document.getElementById('mindmapModal').style.display = 'none';
-            // 清除 SVG 内容
             document.getElementById('mindmapSVG').innerHTML = '';
-            // 清除聊天内容
             document.getElementById('chatMessages').innerHTML = '';
+            if (svgPanZoomInstance) {
+                svgPanZoomInstance.destroy();
+                svgPanZoomInstance = null;
+            }
         }
+
         function generateMindmap() {
             const svg = document.getElementById('mindmapSVG');
-            const width = document.getElementById('mindmapContainer').clientWidth;
-            const nodeRadius = 40;
-            let totalHeight = 0;
+            const width = 1200;
+            const height = 600;
 
-            // 定义节点和连线
             const nodes = [
-                { id: 1, text: 'Memo Transcribe Assist', x: width / 2, y: 50 },
-                { id: 2, text: 'Introduction', x: width / 2, y: 150 },
-                { id: 3, text: 'Record Speech', x: width / 2 - 100, y: 250 },
-                { id: 4, text: 'Create Transcription', x: width / 2 + 100, y: 250 },
-                { id: 5, text: 'Automatic Summarization', x: width / 2, y: 350 },
-                { id: 6, text: 'Easier Review', x: width / 2, y: 450 },
-                { id: 7, text: 'Productivity Tools', x: width / 2, y: 550 },
-                { id: 8, text: 'Designed for Professionals', x: width / 2, y: 650 },
-                { id: 9, text: 'Real-time Collaboration', x: width / 2 - 100, y: 750 },
-                { id: 10, text: 'Data Security', x: width / 2 + 100, y: 750 },
-                { id: 11, text: 'Available via Voice Recorder App', x: width / 2, y: 850 },
-                { id: 12, text: 'More Language Support', x: width / 2, y: 950 },
-                { id: 13, text: 'Positive User Feedback', x: width / 2, y: 1050 },
+                { id: 1, text: 'Memo Transcribe Assist', x: 100, y: height / 2 },
+                { id: 2, text: 'Introduction', x: 300, y: height / 2 - 100 },
+                { id: 3, text: 'Record Speech', x: 500, y: height / 2 - 150 },
+                { id: 4, text: 'Create Transcription', x: 500, y: height / 2 - 50 },
+                { id: 5, text: 'Automatic Summarization', x: 300, y: height / 2 + 100 },
+                { id: 6, text: 'Easier Review', x: 500, y: height / 2 + 100 },
+                { id: 7, text: 'Productivity Tools', x: 700, y: height / 2 },
+                { id: 8, text: 'Designed for Professionals', x: 900, y: height / 2 - 100 },
+                { id: 9, text: 'Real-time Collaboration', x: 1100, y: height / 2 - 150 },
+                { id: 10, text: 'Data Security', x: 1100, y: height / 2 - 50 },
+                { id: 11, text: 'Available via Voice Recorder App', x: 900, y: height / 2 + 100 },
+                { id: 12, text: 'More Language Support', x: 1100, y: height / 2 + 50 },
+                { id: 13, text: 'Positive User Feedback', x: 1100, y: height / 2 + 150 },
             ];
 
             const links = [
@@ -363,21 +379,16 @@
                 { source: 7, target: 8 },
                 { source: 8, target: 9 },
                 { source: 8, target: 10 },
-                { source: 1, target: 11 },
-                { source: 1, target: 12 },
-                { source: 1, target: 13 },
+                { source: 7, target: 11 },
+                { source: 11, target: 12 },
+                { source: 11, target: 13 },
             ];
 
-            totalHeight = nodes[nodes.length - 1].y + nodeRadius + 50;
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
-            svg.setAttribute('height', totalHeight);
-            svg.setAttribute('viewBox', `0 0 ${width} ${totalHeight}`);
-
-            // 创建连线组，放在底层
             const linkGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svg.appendChild(linkGroup);
 
-            // 创建节点组，放在顶层
             const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             svg.appendChild(nodeGroup);
 
@@ -404,12 +415,6 @@
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     group.classList.add('fade-in');
 
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', node.x);
-                    circle.setAttribute('cy', node.y);
-                    circle.setAttribute('r', nodeRadius);
-                    circle.setAttribute('class', 'mindmap-node');
-
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     text.setAttribute('x', node.x);
                     text.setAttribute('y', node.y);
@@ -421,50 +426,99 @@
                     let lineText = '';
                     const lineHeight = 14;
                     let tspanIndex = 0;
+                    let tspans = [];
+
                     words.forEach((word, i) => {
                         const testLine = lineText + word + ' ';
-                        const testElem = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                        testElem.textContent = testLine;
-                        text.appendChild(testElem);
-                        const bbox = testElem.getBBox();
-                        if (bbox.width > nodeRadius * 1.8 && lineText !== '') {
+                        const testTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        testTspan.textContent = testLine;
+                        testTspan.setAttribute('x', node.x);
+                        if (tspanIndex === 0) {
+                            testTspan.setAttribute('dy', '0');
+                        } else {
+                            testTspan.setAttribute('dy', lineHeight);
+                        }
+                        text.appendChild(testTspan);
+                        const bbox = testTspan.getComputedTextLength();
+                        if (bbox > 100 && lineText !== '') {
+                            text.removeChild(testTspan);
                             const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                             tspan.setAttribute('x', node.x);
-                            tspan.setAttribute('dy', lineHeight);
-                            tspan.textContent = word + ' ';
+                            if (tspanIndex === 0) {
+                                tspan.setAttribute('dy', '0');
+                            } else {
+                                tspan.setAttribute('dy', lineHeight);
+                            }
+                            tspan.textContent = lineText.trim();
                             text.appendChild(tspan);
+                            tspans.push(tspan);
                             lineText = word + ' ';
                             tspanIndex++;
                         } else {
-                            if (tspanIndex === 0) {
-                                testElem.setAttribute('x', node.x);
-                                testElem.setAttribute('dy', '0');
-                            } else {
-                                testElem.setAttribute('x', node.x);
-                                testElem.setAttribute('dy', lineHeight);
-                            }
+                            text.removeChild(testTspan);
                             lineText = testLine;
                         }
-                        text.removeChild(testElem);
                     });
 
-                    // 添加最终的 tspan
+                    // 添加最后一行
                     const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                     tspan.setAttribute('x', node.x);
-                    tspan.setAttribute('dy', tspanIndex === 0 ? '0' : lineHeight);
+                    if (tspanIndex === 0) {
+                        tspan.setAttribute('dy', '0');
+                    } else {
+                        tspan.setAttribute('dy', lineHeight);
+                    }
                     tspan.textContent = lineText.trim();
                     text.appendChild(tspan);
+                    tspans.push(tspan);
 
-                    group.appendChild(circle);
+                    // 将 text 添加到临时的 g 元素中，以便测量
+                    const tempGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    tempGroup.appendChild(text);
+                    svg.appendChild(tempGroup);
+
+                    // 获取文本的边界框
+                    const textBBox = text.getBBox();
+
+                    // 创建矩形背景
+                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    const paddingX = 10;
+                    const paddingY = 5;
+                    rect.setAttribute('x', textBBox.x - paddingX);
+                    rect.setAttribute('y', textBBox.y - paddingY);
+                    rect.setAttribute('width', textBBox.width + 2 * paddingX);
+                    rect.setAttribute('height', textBBox.height + 2 * paddingY);
+                    rect.setAttribute('rx', 10);
+                    rect.setAttribute('ry', 10);
+                    rect.setAttribute('class', 'mindmap-node');
+
+                    // 移除临时的 g 元素
+                    svg.removeChild(tempGroup);
+
+                    group.appendChild(rect);
                     group.appendChild(text);
                     nodeGroup.appendChild(group);
                 }, index * 200);
             });
         }
 
+        function initPanZoom() {
+            svgPanZoomInstance = svgPanZoom('#mindmapSVG', {
+                zoomEnabled: true,
+                controlIconsEnabled: false,
+                minZoom: 0.5,
+                maxZoom: 5,
+                fit: true,
+                center: true,
+                // 启用触摸事件
+                dblClickZoomEnabled: false,
+                mouseWheelZoomEnabled: true,
+                preventMouseEventsDefault: true
+            });
+        }
+
         function shareMindmap() {
             alert('分享功能尚未实现。');
-            // 在此处添加实际的分享逻辑，例如生成图片或链接。
         }
 
         function handleKeyPress(event) {
@@ -496,5 +550,7 @@
             }
         }
     </script>
+    <!-- 引入 svg-pan-zoom 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg-pan-zoom/3.6.1/svg-pan-zoom.min.js"></script>
 </body>
 </html>
