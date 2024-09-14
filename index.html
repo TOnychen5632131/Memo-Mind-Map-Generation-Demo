@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <title>Memo Transcribe Assist Demo</title>
@@ -105,11 +105,11 @@
             display: none;
             flex-direction: column;
             z-index: 2;
-            overflow: hidden;
         }
         .mindmap-container {
             flex: 1;
             position: relative;
+            overflow-y: auto; /* 允许垂直滚动 */
         }
         .close-button {
             position: absolute;
@@ -137,7 +137,7 @@
             stroke-width: 1px;
         }
         .mindmap-text {
-            font-size: 14px;
+            font-size: 12px;
             text-anchor: middle;
             fill: #000;
         }
@@ -221,14 +221,59 @@
                 <p>中文翻译："此功能是为专业人士设计的更广泛生产力工具套件的一部分。"</p>
             </div>
         </div>
+        <!-- Speaker 4 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 4</span>
+                <span class="timestamp">00:35</span>
+            </div>
+            <div class="text-content">
+                <p>English: "Users can also collaborate in real-time with team members through the app."</p>
+                <p>中文翻译："用户还可以通过该应用程序与团队成员实时协作。"</p>
+            </div>
+        </div>
+        <!-- Speaker 5 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 5</span>
+                <span class="timestamp">00:45</span>
+            </div>
+            <div class="text-content">
+                <p>English: "The security features ensure that all data is encrypted and safely stored."</p>
+                <p>中文翻译："安全功能确保所有数据都被加密并安全存储。"</p>
+            </div>
+        </div>
         <!-- Speaker 1 Again -->
         <div class="message">
             <div>
                 <span class="speaker">Speaker 1</span>
-                <span class="timestamp">00:40</span>
+                <span class="timestamp">00:55</span>
             </div>
             <div class="text-content">
                 <p>English: "The transcribe assist feature is available through the Voice Recorder app."</p>
+                <p>中文翻译："转录辅助功能可通过语音记录器应用程序使用。"</p>
+            </div>
+        </div>
+        <!-- Speaker 6 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 6</span>
+                <span class="timestamp">01:05</span>
+            </div>
+            <div class="text-content">
+                <p>English: "We plan to add support for more languages in the next update."</p>
+                <p>中文翻译："我们计划在下次更新中添加对更多语言的支持。"</p>
+            </div>
+        </div>
+        <!-- Speaker 7 -->
+        <div class="message">
+            <div>
+                <span class="speaker">Speaker 7</span>
+                <span class="timestamp">01:15</span>
+            </div>
+            <div class="text-content">
+                <p>English: "Feedback from users has been overwhelmingly positive so far."</p>
+                <p>中文翻译："到目前为止，用户的反馈一直非常积极。"</p>
             </div>
         </div>
     </div>
@@ -264,7 +309,7 @@
         <div class="share-button" onclick="shareMindmap()">&#x1F517;</div>
         <div class="mindmap-container" id="mindmapContainer">
             <!-- 思维导图 SVG -->
-            <svg id="mindmapSVG" width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet"></svg>
+            <svg id="mindmapSVG" width="100%" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
         <!-- 聊天框 -->
         <div class="chat-box">
@@ -287,22 +332,25 @@
         }
         function generateMindmap() {
             const svg = document.getElementById('mindmapSVG');
-            const width = 800;
-            const height = 600;
-            const centerX = width / 2;
-            const centerY = 100;
-            const nodeRadius = 50;
+            const width = document.getElementById('mindmapContainer').clientWidth;
+            const nodeRadius = 40;
+            let totalHeight = 0;
 
+            // 定义节点和连线
             const nodes = [
-                { id: 1, text: 'Memo Transcribe Assist', x: centerX, y: centerY },
-                { id: 2, text: 'Introduction', x: centerX - 200, y: centerY + 150 },
-                { id: 3, text: 'Record Speech', x: centerX - 300, y: centerY + 300 },
-                { id: 4, text: 'Create Transcription', x: centerX - 100, y: centerY + 300 },
-                { id: 5, text: 'Automatic Summarization', x: centerX, y: centerY + 150 },
-                { id: 6, text: 'Easier Review', x: centerX, y: centerY + 300 },
-                { id: 7, text: 'Productivity Tools', x: centerX + 200, y: centerY + 150 },
-                { id: 8, text: 'Designed for Professionals', x: centerX + 200, y: centerY + 300 },
-                { id: 9, text: 'Available via Voice Recorder App', x: centerX, y: centerY + 450 },
+                { id: 1, text: 'Memo Transcribe Assist', x: width / 2, y: 50 },
+                { id: 2, text: 'Introduction', x: width / 2, y: 150 },
+                { id: 3, text: 'Record Speech', x: width / 2 - 100, y: 250 },
+                { id: 4, text: 'Create Transcription', x: width / 2 + 100, y: 250 },
+                { id: 5, text: 'Automatic Summarization', x: width / 2, y: 350 },
+                { id: 6, text: 'Easier Review', x: width / 2, y: 450 },
+                { id: 7, text: 'Productivity Tools', x: width / 2, y: 550 },
+                { id: 8, text: 'Designed for Professionals', x: width / 2, y: 650 },
+                { id: 9, text: 'Real-time Collaboration', x: width / 2 - 100, y: 750 },
+                { id: 10, text: 'Data Security', x: width / 2 + 100, y: 750 },
+                { id: 11, text: 'Available via Voice Recorder App', x: width / 2, y: 850 },
+                { id: 12, text: 'More Language Support', x: width / 2, y: 950 },
+                { id: 13, text: 'Positive User Feedback', x: width / 2, y: 1050 },
             ];
 
             const links = [
@@ -313,8 +361,25 @@
                 { source: 5, target: 6 },
                 { source: 1, target: 7 },
                 { source: 7, target: 8 },
-                { source: 1, target: 9 },
+                { source: 8, target: 9 },
+                { source: 8, target: 10 },
+                { source: 1, target: 11 },
+                { source: 1, target: 12 },
+                { source: 1, target: 13 },
             ];
+
+            totalHeight = nodes[nodes.length - 1].y + nodeRadius + 50;
+
+            svg.setAttribute('height', totalHeight);
+            svg.setAttribute('viewBox', `0 0 ${width} ${totalHeight}`);
+
+            // 创建连线组，放在底层
+            const linkGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            svg.appendChild(linkGroup);
+
+            // 创建节点组，放在顶层
+            const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            svg.appendChild(nodeGroup);
 
             // 创建连线
             links.forEach((link, index) => {
@@ -329,8 +394,8 @@
                     line.setAttribute('stroke', '#000');
                     line.setAttribute('stroke-width', '2');
                     line.classList.add('fade-in');
-                    svg.appendChild(line);
-                }, index * 300);
+                    linkGroup.appendChild(line);
+                }, index * 200);
             });
 
             // 创建节点
@@ -350,11 +415,11 @@
                     text.setAttribute('y', node.y);
                     text.setAttribute('dy', '.35em');
                     text.setAttribute('class', 'mindmap-text');
-                    text.textContent = node.text;
+
                     // 自动换行
                     const words = node.text.split(' ');
                     let lineText = '';
-                    const lineHeight = 16;
+                    const lineHeight = 14;
                     let tspanIndex = 0;
                     words.forEach((word, i) => {
                         const testLine = lineText + word + ' ';
@@ -392,8 +457,8 @@
 
                     group.appendChild(circle);
                     group.appendChild(text);
-                    svg.appendChild(group);
-                }, index * 300);
+                    nodeGroup.appendChild(group);
+                }, index * 200);
             });
         }
 
